@@ -37,6 +37,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: theme.SIZES.BASE * 1,
     zIndex: 3,
     position: 'absolute',
-bottom: Platform.OS === 'android' ? theme.SIZES.BASE * 2 : theme.SIZES.BASE * 5,
+    bottom: Platform.OS === 'android' ? theme.SIZES.BASE * 2 : theme.SIZES.BASE * 5,
   },
 });

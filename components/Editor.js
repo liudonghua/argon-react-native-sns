@@ -12,10 +12,20 @@ import {
   RichEditor,
   RichToolbar,
 } from "react-native-pell-rich-editor";
-import { Images, argonTheme } from "../constants";
+import { argonTheme } from "../constants";
+
+import { useTranslation , Trans } from "react-i18next";
+
+import '../i18n';
+
+
+const maxSize = 5000;
+const restLength = 100;
 
 export default function App() {
   const richText = useRef();
+
+  const { t } = useTranslation(['components', 'common']);
 
   const [descHTML, setDescHTML] = useState("");
   const [showDescError, setShowDescError] = useState(false);
@@ -45,13 +55,16 @@ export default function App() {
     <SafeAreaView edges={["bottom", "left", "right"]} style={{ flex: 1 }}>
       <View style={styles.container}>
         <Pressable onPress={() => richText.current?.dismissKeyboard()}>
-          <Text style={styles.headerStyle}>Your awesome Content</Text>
+          <Text style={styles.headerStyle}>{t("Editor.Caption")}</Text>
+          <View style={styles.htmlBoxStyle}>
+            <Text>{descHTML}</Text>
+          </View>
         </Pressable>
         <View style={styles.richTextContainer}>
           <RichEditor
             ref={richText}
             onChange={richTextHandle}
-            placeholder="Write your cool content here :)"
+            placeholder={t("Editor.PlaceHolder")}
             androidHardwareAccelerationDisabled={true}
             style={styles.richTextEditorStyle}
             initialHeight={250}
@@ -63,26 +76,25 @@ export default function App() {
             actions={[
               actions.insertImage,
               actions.setBold,
-              actions.setItalic,
-              actions.insertBulletsList,
-              actions.insertOrderedList,
-              actions.insertLink,
               actions.setStrikethrough,
-              actions.setUnderline,
+              actions.insertLink,
+              actions.insertVideo,
+              actions.undo,
+              actions.redo
             ]}
             style={styles.richTextToolbarStyle}
           />
         </View>
         {showDescError && (
           <Text style={styles.errorTextStyle}>
-            Your content shouldn't be empty 🤔
+            <Trans i18nKey="Editor.Tip" max={maxSize} rest={restLength}>Rest {rest} / {max}  bytes</Trans>
           </Text>
         )}
 
         <TouchableOpacity
           style={styles.saveButtonStyle}
           onPress={submitContentHandle}>
-          <Text style={styles.textButtonStyle}>Save</Text>
+          <Text style={styles.textButtonStyle}>{t("common:SaveButton", {ns: 'common'})}</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -102,6 +114,15 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "600",
     color: argonTheme.COLORS.HEADER,
+    marginBottom: 10,
+  },
+
+  htmlBoxStyle: {
+    height: 200,
+    width: 330,
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    padding: 20,
     marginBottom: 10,
   },
 
